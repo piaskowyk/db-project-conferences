@@ -1,0 +1,50 @@
+Java w AI
+Sieci Neuronowe
+Algorytmy Genetyczne
+Testy Penetracyjne
+UX for advanced
+Marketing w IT
+GameDev a AI
+Clen Code i dobre praktyki
+Jak testować?
+Optymalizacje bazy danych
+Systemy rozproszone
+Technologie współbierzne
+Najczęstsze podatności w aplikacja webowych
+Metody autoryzacji
+Python
+Java
+C
+C++
+JS
+PHP
+C#
+ASP.NET
+.NET
+Pascal
+FPGA
+FPGA w zastosowaniach
+Haskell
+Języki funkcyjne
+Scala
+expo.js
+React.js
+React Native
+Adndroid
+Systemy UNIX
+DevOps
+SQL
+MSSQL
+Postgres
+MongoDB
+Jak zabezpieczać aplikacje webowe
+Bezpieczeństwo w aplikacjach webowych
+Bezpieczeństwo w aplikacjach mobilnych
+Metody obliczeniowe
+Technologie przyszłości
+Wirtualna rzeczywistość
+Metody ochrony przed zaawansowanymi cyberatakami
+Testy wydajności
+RODO
+Optymalizacja kodu
+F#
