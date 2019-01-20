@@ -273,6 +273,7 @@ class Generator(object):
                     query = 'exec addNewWorkshopBooking \
                     @workshop_id = ' + str(workshop['id']) + ', \
                     @booking_place = ' + str(bookingPlace) + ', \
+                    @booking_date = "' + str(item['booking_date']) + '", \
                     @conferences_day_booking_id = ' + str(idCDB)
                     out.append(query)
                 i += 1
@@ -350,7 +351,8 @@ class Generator(object):
                 query = 'exec addNewConferenceDaysRegistration \
                 @conferences_days_booking_id = ' + str(confDayBooking['id']) + ', \
                 @participants_id = ' + str(participant['id']) + ',\
-                @is_student = ' + str(isStudent)
+                @is_student = ' + str(isStudent) + ', \
+                @registration_date = "' + str(confDayBooking['booking_date']) + '"'
                 participantsSet.append(participant['id'])
                 out.append(query)
                 i += 1
@@ -411,34 +413,51 @@ class Generator(object):
             os.remove(fileName)
         sqlOutputs = open(fileName, 'a')
         out = []
-
-        allWorkshopBooking = self.db.cursor(as_dict=True)
-        allWorkshopBooking.execute("select * from workshops_booking")
-
         allConfDayReseg = self.db.cursor(as_dict=True)
         allConfDayReseg.execute("select * from conferences_days_registrations")
         allConfDayResegList = allConfDayReseg.fetchall()
 
+        allWorkshopBooking = self.db.cursor(as_dict=True)
+        allWorkshopBooking.execute("select * from workshops_booking")
         for workshopBooking in allWorkshopBooking:
-            idCDB = self.existRelation(workshopBooking['conferences_days_booking_id'], 'conferences_days_booking_id', allConfDayResegList);
+            idCDB = self.existRelation(workshopBooking['conferences_days_bookings_id'], 'conferences_days_bookings_id', allConfDayResegList);
             if idCDB == 0:
-                print("aaaaaaaa")
                 continue
             item = self.getItemById(idCDB, allConfDayResegList)
             i = 0
-            while i < workshopBooking['booking_places']:
+            while i < workshopBooking['booking_place']:
                 query = 'exec addNewWorkshopRegistration \
                 @workshop_booking_id = ' + str(workshopBooking['id']) + ', \
-                conferences_days_registrations_id = ' + str(item['id']) 
+                @conferences_days_registrations_id = ' + str(item['id']) + ', \
+                @registration_date = "' + str(item['registration_date']) + '"'
                 out.append(query)
-            i += 1
+                i += 1
 
         for i in out:
             sqlOutputs.write(self.cleanItem(i) + '\n')
         sqlOutputs.close() 
 
     def getPayments(self):
-        print("TODO")
+        fileName = 'payments.sql'
+        if os.path.exists(fileName):
+            os.remove(fileName)
+        sqlOutputs = open(fileName, 'a')
+        out = []
+        payMethod = ["cash", "card"]
+        allBooking = self.db.cursor(as_dict=True)
+        allBooking.execute("select * from conferences_days_bookings where cancel_date is null")
+
+        for booking in allBooking:
+            query = 'exec addNewPayment \
+            @pay_amount = ' + str(random.randint(500, 10000)) + ".00" + ', \
+            @conferences_days_booking_id = ' + str(booking['id']) + ', \
+            @payment_date = "' + str(dt.strptime(booking['booking_date'], '%Y-%m-%d') + timedelta(days=random.randint(1, 5))).split(' ')[0] + '", \
+            @payments_method = "' + payMethod[random.randint(0, 1)] + '"'
+            out.append(query)
+
+        for i in out:
+            sqlOutputs.write(self.cleanItem(i) + '\n')
+        sqlOutputs.close() 
 
 ##################
 

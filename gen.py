@@ -1,5 +1,5 @@
 from generator import Generator
 
 gen = Generator()
-gen.getConferencesDayReservation()
+gen.getPayments()
 # gen.execFile('workshopBooking.sql')
