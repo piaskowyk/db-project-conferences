@@ -24,66 +24,6 @@ class Generator(object):
     def __del__(self):
         self.db.close()
 
-    def genClients(self, how):       
-        namesFile = open('data/names.txt', 'r')
-        namesSet = namesFile.readlines()
-        surnamesFile = open('data/surnames.txt', 'r')
-        surnamesSet = surnamesFile.readlines()
-        placesFile = open('data/place.txt', 'r')
-        places = placesFile.readlines()
-
-        out = []
-        sqlOutputs = open('clientsSql.sql', 'a')
-        emailSet = [] #email must be unique
-        phoneSet = [] #phone must be unique
-        loginSet = [] #login must be unique
-        acNoSet = [] #account number must be unique
-        
-        i = 0
-        while i < how:
-            name = self.getRandElementFromTable(namesSet)
-            surname = self.getRandElementFromTable(surnamesSet)
-            adress = self.getRandElementFromTable(places)
-            adress = adress.split(',')
-            nr = adress[2]
-            nr = nr.split('/')
-
-            email = name + '.' + surname + '@gmail.com'
-            phone = random.randint(528349553, 967942954)
-            login = name + surname + str(random.randint(0, 99999))
-            pasHash = self.getHash()
-            accountNumber = self.getAccountNumber()
-            bit = random.randint(0, 1)
-
-            if email in emailSet or phone in emailSet or login in loginSet:
-                continue
-            
-            query = 'INSERT INTO `clients` (name, phone_number, email, password_hash, account_number, city, street, house_number, flat_number, zip, is_company) values ("' \
-            + name + ' ' + surname + '", "' \
-            + str(phone) + '", "' \
-            + email + '", "' \
-            + login + '", "' \
-            + pasHash + '", "' \
-            + accountNumber + '", "' \
-            + adress[0] + '", "' \
-            + adress[1] + '", "' \
-            + nr[0] + '", "' \
-            + nr[1] + '", "' \
-            + adress[3] + '", ' \
-            + str(bit) + ')' 
-
-            if query in out:
-                continue
-            out.append(query)
-            emailSet.append(email)
-            phoneSet.append(phone)
-            loginSet.append(login)
-            i += 1
-
-        for i in out:
-            sqlOutputs.write(i + '\n')
-        sqlOutputs.close()
-
     def genConferences(self):
         how = 100
         conferencesNameFile = open('data/conferences_name.txt', 'r')
@@ -151,6 +91,66 @@ class Generator(object):
         for i in out:
             sqlOutputs.write(self.cleanItem(i) + '\n')
         sqlOutputs.close() 
+
+    def genClients(self, how):       
+        namesFile = open('data/names.txt', 'r')
+        namesSet = namesFile.readlines()
+        surnamesFile = open('data/surnames.txt', 'r')
+        surnamesSet = surnamesFile.readlines()
+        placesFile = open('data/place.txt', 'r')
+        places = placesFile.readlines()
+
+        out = []
+        sqlOutputs = open('clientsSql.sql', 'a')
+        emailSet = [] #email must be unique
+        phoneSet = [] #phone must be unique
+        loginSet = [] #login must be unique
+        acNoSet = [] #account number must be unique
+        
+        i = 0
+        while i < how:
+            name = self.getRandElementFromTable(namesSet)
+            surname = self.getRandElementFromTable(surnamesSet)
+            adress = self.getRandElementFromTable(places)
+            adress = adress.split(',')
+            nr = adress[2]
+            nr = nr.split('/')
+
+            email = name + '.' + surname + '@gmail.com'
+            phone = random.randint(528349553, 967942954)
+            login = name + surname + str(random.randint(0, 99999))
+            pasHash = self.getHash()
+            accountNumber = self.getAccountNumber()
+            bit = random.randint(0, 1)
+
+            if email in emailSet or phone in emailSet or login in loginSet:
+                continue
+            
+            query = 'INSERT INTO `clients` (name, phone_number, email, password_hash, account_number, city, street, house_number, flat_number, zip, is_company) values ("' \
+            + name + ' ' + surname + '", "' \
+            + str(phone) + '", "' \
+            + email + '", "' \
+            + login + '", "' \
+            + pasHash + '", "' \
+            + accountNumber + '", "' \
+            + adress[0] + '", "' \
+            + adress[1] + '", "' \
+            + nr[0] + '", "' \
+            + nr[1] + '", "' \
+            + adress[3] + '", ' \
+            + str(bit) + ')' 
+
+            if query in out:
+                continue
+            out.append(query)
+            emailSet.append(email)
+            phoneSet.append(phone)
+            loginSet.append(login)
+            i += 1
+
+        for i in out:
+            sqlOutputs.write(i + '\n')
+        sqlOutputs.close()
 
     def getWorkshop(self):
         themesSet = open('data/conferences_theme.txt', 'r').readlines()
